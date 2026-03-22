@@ -7,7 +7,7 @@
         <title inertia>{{ config('app.name', 'Expense Tracker') }}</title>
 
         @viteReactRefresh
-        @vite(['resources/css/app.css', 'resources/js/app.jsx'])
+        @vite(['resources/css/app.css', 'resources/js/app.tsx'])
         @inertiaHead
     </head>
     <body class="antialiased">
