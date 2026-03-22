@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "type": "http",
+      "url": "https://shadcn-mcp.vercel.app/mcp"
+    },
+    "laravel": {
+      "command": "php",
+      "args": ["artisan", "mcp:start"]
+    }
+  }
+}
