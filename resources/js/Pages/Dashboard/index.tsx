@@ -4,8 +4,19 @@ import { PageHeader } from "@/components/page-header";
 import { DashboardStatCards } from "./_components/DashboardStatCards";
 import { DashboardRecentExpenses } from "./_components/DashboardRecentExpenses";
 import { DashboardBudgetOverview } from "./_components/DashboardBudgetOverview";
+import { DashboardStats, BudgetOverviewItem, RecentExpense } from "./types";
 
-export default function Dashboard() {
+interface DashboardProps {
+  stats: DashboardStats;
+  budgetOverview: BudgetOverviewItem[];
+  recentExpenses: RecentExpense[];
+}
+
+export default function Dashboard({
+  stats,
+  budgetOverview,
+  recentExpenses,
+}: DashboardProps) {
   return (
     <AppLayout>
       <Head title="Dashboard" />
@@ -14,11 +25,11 @@ export default function Dashboard() {
         description="Overview of your expenses this month"
       />
       <div className="mx-auto max-w-6xl space-y-8 p-6 md:p-8">
-        <DashboardStatCards />
+        <DashboardStatCards stats={stats} />
 
         <div className="grid gap-6 lg:grid-cols-5">
-          <DashboardRecentExpenses />
-          <DashboardBudgetOverview />
+          <DashboardRecentExpenses expenses={recentExpenses} />
+          <DashboardBudgetOverview items={budgetOverview} />
         </div>
       </div>
     </AppLayout>

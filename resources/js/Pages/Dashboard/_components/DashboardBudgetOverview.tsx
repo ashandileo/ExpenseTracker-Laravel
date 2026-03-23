@@ -6,39 +6,37 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { PiggyBank } from "lucide-react";
+import { BudgetOverviewItem } from "../types";
+import { formatRupiah } from "../../Expenses/constants";
 
-const budgetOverview = [
-  {
-    category: "Food & Groceries",
-    spent: 1800000,
-    budget: 2500000,
-    color: "bg-emerald-500",
-  },
-  {
-    category: "Transportation",
-    spent: 650000,
-    budget: 1000000,
-    color: "bg-blue-500",
-  },
-  {
-    category: "Entertainment",
-    spent: 420000,
-    budget: 500000,
-    color: "bg-purple-500",
-  },
-  {
-    category: "Utilities",
-    spent: 750000,
-    budget: 800000,
-    color: "bg-yellow-500",
-  },
-];
-
-function formatRupiah(n: number) {
-  return "Rp " + n.toLocaleString("id-ID");
+interface DashboardBudgetOverviewProps {
+  items: BudgetOverviewItem[];
 }
 
-export function DashboardBudgetOverview() {
+export function DashboardBudgetOverview({
+  items,
+}: DashboardBudgetOverviewProps) {
+  if (items.length === 0) {
+    return (
+      <Card className="lg:col-span-2">
+        <CardHeader>
+          <CardTitle>Budget Overview</CardTitle>
+          <CardDescription>Monthly budget progress</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <PiggyBank className="size-10 text-muted-foreground mb-2" />
+            <p className="text-sm text-muted-foreground">
+              No budgets set yet. Set a budget on your categories to track
+              spending.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="lg:col-span-2">
       <CardHeader>
@@ -46,7 +44,7 @@ export function DashboardBudgetOverview() {
         <CardDescription>Monthly budget progress</CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
-        {budgetOverview.map((item) => {
+        {items.map((item) => {
           const pct = Math.round((item.spent / item.budget) * 100);
           return (
             <div key={item.category} className="space-y-2">
@@ -56,7 +54,7 @@ export function DashboardBudgetOverview() {
                 </small>
                 <p className="text-sm text-muted-foreground">{pct}%</p>
               </div>
-              <Progress value={pct} className="h-2" />
+              <Progress value={Math.min(pct, 100)} className="h-2" />
               <div className="flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">
                   {formatRupiah(item.spent)}

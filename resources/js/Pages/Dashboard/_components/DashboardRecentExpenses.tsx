@@ -6,73 +6,48 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-  ShoppingCart,
-  Coffee,
-  Car,
-  Zap,
-  UtensilsCrossed,
-  Gamepad2,
-} from "lucide-react";
+import { Receipt } from "lucide-react";
+import { RecentExpense } from "../types";
+import { getCategoryStyle, formatRupiah } from "../../Expenses/constants";
 
-const recentExpenses = [
-  {
-    id: 1,
-    description: "Grocery Shopping",
-    category: "Food & Groceries",
-    amount: "Rp 350.000",
-    date: "Today",
-    icon: ShoppingCart,
-    color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
-  },
-  {
-    id: 2,
-    description: "Morning Coffee",
-    category: "Coffee & Drinks",
-    amount: "Rp 45.000",
-    date: "Today",
-    icon: Coffee,
-    color: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
-  },
-  {
-    id: 3,
-    description: "Grab to Office",
-    category: "Transportation",
-    amount: "Rp 65.000",
-    date: "Yesterday",
-    icon: Car,
-    color: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-  },
-  {
-    id: 4,
-    description: "Electricity Bill",
-    category: "Utilities",
-    amount: "Rp 450.000",
-    date: "Yesterday",
-    icon: Zap,
-    color: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400",
-  },
-  {
-    id: 5,
-    description: "Dinner with Friends",
-    category: "Food & Groceries",
-    amount: "Rp 280.000",
-    date: "Mar 21",
-    icon: UtensilsCrossed,
-    color: "bg-rose-500/10 text-rose-600 dark:text-rose-400",
-  },
-  {
-    id: 6,
-    description: "Netflix Subscription",
-    category: "Entertainment",
-    amount: "Rp 186.000",
-    date: "Mar 20",
-    icon: Gamepad2,
-    color: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
-  },
-];
+interface DashboardRecentExpensesProps {
+  expenses: RecentExpense[];
+}
 
-export function DashboardRecentExpenses() {
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  if (date.toDateString() === today.toDateString()) return "Today";
+  if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+export function DashboardRecentExpenses({
+  expenses,
+}: DashboardRecentExpensesProps) {
+  if (expenses.length === 0) {
+    return (
+      <Card className="lg:col-span-3">
+        <CardHeader>
+          <CardTitle>Recent Expenses</CardTitle>
+          <CardDescription>Your latest spending activity</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <Receipt className="size-10 text-muted-foreground mb-2" />
+            <p className="text-sm text-muted-foreground">
+              No expenses yet this month.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="lg:col-span-3">
       <CardHeader>
@@ -81,34 +56,39 @@ export function DashboardRecentExpenses() {
       </CardHeader>
       <CardContent>
         <div className="space-y-1">
-          {recentExpenses.map((expense, i) => (
-            <div key={expense.id}>
-              <div className="flex items-center gap-3 py-3">
-                <div
-                  className={`flex size-9 items-center justify-center rounded-lg ${expense.color}`}
-                >
-                  <expense.icon className="size-4" />
+          {expenses.map((expense, i) => {
+            const style = getCategoryStyle(expense.category?.icon ?? "");
+            const IconComponent = style.icon;
+
+            return (
+              <div key={expense.id}>
+                <div className="flex items-center gap-3 py-3">
+                  <div
+                    className={`flex size-9 items-center justify-center rounded-lg ${style.bgColor} ${style.color}`}
+                  >
+                    <IconComponent className="size-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <small className="text-sm leading-none font-medium truncate block">
+                      {expense.description}
+                    </small>
+                    <p className="text-sm text-muted-foreground">
+                      {expense.category?.name ?? "Uncategorized"}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <small className="text-sm leading-none font-medium">
+                      -{formatRupiah(expense.amount)}
+                    </small>
+                    <p className="text-sm text-muted-foreground">
+                      {formatDate(expense.date)}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <small className="text-sm leading-none font-medium truncate block">
-                    {expense.description}
-                  </small>
-                  <p className="text-sm text-muted-foreground">
-                    {expense.category}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <small className="text-sm leading-none font-medium">
-                    -{expense.amount}
-                  </small>
-                  <p className="text-sm text-muted-foreground">
-                    {expense.date}
-                  </p>
-                </div>
+                {i < expenses.length - 1 && <Separator />}
               </div>
-              {i < recentExpenses.length - 1 && <Separator />}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>
