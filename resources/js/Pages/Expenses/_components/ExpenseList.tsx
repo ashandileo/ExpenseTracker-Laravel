@@ -30,9 +30,11 @@ function formatDate(dateStr: string) {
 
 interface ExpenseListProps {
     expenses: Expense[];
+    onEdit: (expense: Expense) => void;
+    onDelete: (expense: Expense) => void;
 }
 
-export function ExpenseList({ expenses }: ExpenseListProps) {
+export function ExpenseList({ expenses, onEdit, onDelete }: ExpenseListProps) {
     const grouped = expenses.reduce<Record<string, Expense[]>>((acc, e) => {
         const key = e.date;
         if (!acc[key]) acc[key] = [];
@@ -104,11 +106,11 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => onEdit(expense)}>
                                                     <Pencil className="size-3.5" />
                                                     Edit
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem className="text-destructive">
+                                                <DropdownMenuItem className="text-destructive" onClick={() => onDelete(expense)}>
                                                     <Trash2 className="size-3.5" />
                                                     Delete
                                                 </DropdownMenuItem>
