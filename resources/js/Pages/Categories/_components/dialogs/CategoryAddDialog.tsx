@@ -1,4 +1,5 @@
 import { router } from "@inertiajs/react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,7 +24,10 @@ export function CategoryAddDialog({
 }: CategoryAddDialogProps) {
   function handleSubmit(values: CategoryFormValues) {
     router.post("/categories", values, {
-      onSuccess: () => onOpenChange(false),
+      onSuccess: () => {
+        onOpenChange(false);
+        toast.success("Category added successfully");
+      },
     });
   }
 

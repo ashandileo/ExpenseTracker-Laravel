@@ -1,4 +1,5 @@
 import { Head, router } from "@inertiajs/react";
+import { toast } from "sonner";
 import AppLayout from "@/Layouts/AppLayout";
 import { PageHeader } from "@/components/page-header";
 import { ConfirmationDialog } from "@/components/confirmation-dialog";
@@ -27,7 +28,10 @@ export default function Categories({ categories }: CategoriesProps) {
     if (!category) return;
 
     router.delete(`/categories/${category.id}`, {
-      onSuccess: () => clearAction(),
+      onSuccess: () => {
+        clearAction();
+        toast.success("Category deleted successfully");
+      },
     });
   }
 

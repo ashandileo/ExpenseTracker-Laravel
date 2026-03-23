@@ -1,4 +1,5 @@
 import { router } from "@inertiajs/react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +25,10 @@ export function CategoryEditDialog({
   function handleSubmit(values: CategoryFormValues) {
     if (!category) return;
     router.put(`/categories/${category.id}`, values, {
-      onSuccess: () => onOpenChange(false),
+      onSuccess: () => {
+        onOpenChange(false);
+        toast.success("Category updated successfully");
+      },
     });
   }
 
