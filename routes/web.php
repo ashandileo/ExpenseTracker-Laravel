@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ExpenseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -19,9 +20,10 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Dashboard');
     });
 
-    Route::get('/expenses', function () {
-        return Inertia::render('Expenses');
-    });
+    Route::get('/expenses', [ExpenseController::class, 'index']);
+    Route::post('/expenses', [ExpenseController::class, 'store']);
+    Route::put('/expenses/{expense}', [ExpenseController::class, 'update']);
+    Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy']);
 
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::post('/categories', [CategoryController::class, 'store']);

@@ -1,13 +1,16 @@
-import React from "react";
+export interface ExpenseCategory {
+  id: number;
+  name: string;
+  icon: string;
+  color: string;
+}
 
 export interface Expense {
   id: number;
+  category_id: number;
   description: string;
-  category: string;
-  amount: string;
-  rawAmount: number;
+  amount: number;
   date: string;
   note?: string;
-  icon: React.ElementType;
-  color: string;
+  category: ExpenseCategory;
 }

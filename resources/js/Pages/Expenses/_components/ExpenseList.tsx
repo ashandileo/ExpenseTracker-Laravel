@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Calendar, MoreVertical, Pencil, Trash2, Search } from "lucide-react";
 import { Expense } from "../types";
+import { getCategoryStyle, formatRupiah } from "../constants";
 
 function formatDate(dateStr: string) {
   const date = new Date(dateStr);
@@ -30,7 +31,7 @@ interface ExpenseListProps {
 
 export function ExpenseList({ expenses, onEdit, onDelete }: ExpenseListProps) {
   const grouped = expenses.reduce<Record<string, Expense[]>>((acc, e) => {
-    const key = e.date;
+    const key = e.date.split("T")[0];
     if (!acc[key]) acc[key] = [];
     acc[key].push(e);
     return acc;
@@ -68,54 +69,58 @@ export function ExpenseList({ expenses, onEdit, onDelete }: ExpenseListProps) {
           </div>
           <Card>
             <CardContent className="p-0">
-              {grouped[date].map((expense, i) => (
-                <div key={expense.id}>
-                  <div className="flex items-center gap-3 px-4 py-3">
-                    <div
-                      className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${expense.color}`}
-                    >
-                      <expense.icon className="size-4" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <small className="text-sm leading-none font-medium truncate block">
-                        {expense.description}
-                      </small>
-                      <Badge
-                        variant="secondary"
-                        className="mt-0.5 text-xs font-normal"
+              {grouped[date].map((expense, i) => {
+                const style = getCategoryStyle(expense.category?.icon ?? "");
+                const Icon = style.icon;
+                return (
+                  <div key={expense.id}>
+                    <div className="flex items-center gap-3 px-4 py-3">
+                      <div
+                        className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${style.bgColor} ${style.color}`}
                       >
-                        {expense.category}
-                      </Badge>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <small className="text-sm leading-none font-medium">
-                        -{expense.amount}
-                      </small>
-                    </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon-xs">
-                          <MoreVertical className="size-3.5" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => onEdit(expense)}>
-                          <Pencil className="size-3.5" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={() => onDelete(expense)}
+                        <Icon className="size-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <small className="text-sm leading-none font-medium truncate block">
+                          {expense.description}
+                        </small>
+                        <Badge
+                          variant="secondary"
+                          className="mt-0.5 text-xs font-normal"
                         >
-                          <Trash2 className="size-3.5" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                          {expense.category?.name ?? "Uncategorized"}
+                        </Badge>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <small className="text-sm leading-none font-medium">
+                          -{formatRupiah(expense.amount)}
+                        </small>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon-xs">
+                            <MoreVertical className="size-3.5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => onEdit(expense)}>
+                            <Pencil className="size-3.5" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-destructive"
+                            onClick={() => onDelete(expense)}
+                          >
+                            <Trash2 className="size-3.5" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                    {i < grouped[date].length - 1 && <Separator />}
                   </div>
-                  {i < grouped[date].length - 1 && <Separator />}
-                </div>
-              ))}
+                );
+              })}
             </CardContent>
           </Card>
         </div>

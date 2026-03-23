@@ -1,3 +1,5 @@
+import { router } from "@inertiajs/react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,17 +12,26 @@ import {
 import { Plus } from "lucide-react";
 import { ExpenseForm } from "../forms/ExpenseForm";
 import type { ExpenseFormValues } from "../forms/schema";
+import { ExpenseCategory } from "../../types";
 
 interface ExpenseAddDialogProps {
+  categories: ExpenseCategory[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function ExpenseAddDialog({ open, onOpenChange }: ExpenseAddDialogProps) {
+export function ExpenseAddDialog({
+  categories,
+  open,
+  onOpenChange,
+}: ExpenseAddDialogProps) {
   function handleSubmit(values: ExpenseFormValues) {
-    console.log("Add expense:", values);
-    // TODO: implement actual create logic
-    onOpenChange(false);
+    router.post("/expenses", values, {
+      onSuccess: () => {
+        onOpenChange(false);
+        toast.success("Expense added successfully");
+      },
+    });
   }
 
   return (
@@ -39,6 +50,7 @@ export function ExpenseAddDialog({ open, onOpenChange }: ExpenseAddDialogProps) 
           </DialogDescription>
         </DialogHeader>
         <ExpenseForm
+          categories={categories}
           onSubmit={handleSubmit}
           onCancel={() => onOpenChange(false)}
           submitLabel="Save Expense"

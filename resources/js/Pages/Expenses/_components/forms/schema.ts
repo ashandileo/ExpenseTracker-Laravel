@@ -5,7 +5,9 @@ export const expenseFormSchema = z.object({
   amount: z
     .number({ error: "Amount must be a number" })
     .positive({ error: "Amount must be greater than 0" }),
-  category: z.string().min(1, "Category is required"),
+  category_id: z
+    .number({ error: "Category is required" })
+    .positive({ error: "Category is required" }),
   date: z.string().min(1, "Date is required"),
   note: z.string().optional(),
 });

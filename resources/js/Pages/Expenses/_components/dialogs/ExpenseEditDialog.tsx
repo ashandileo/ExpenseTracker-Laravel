@@ -1,3 +1,5 @@
+import { router } from "@inertiajs/react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -7,23 +9,29 @@ import {
 } from "@/components/ui/dialog";
 import { ExpenseForm } from "../forms/ExpenseForm";
 import type { ExpenseFormValues } from "../forms/schema";
-import { Expense } from "../../types";
+import { Expense, ExpenseCategory } from "../../types";
 
 interface ExpenseEditDialogProps {
+  categories: ExpenseCategory[];
   expense: Expense | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 export function ExpenseEditDialog({
+  categories,
   expense,
   open,
   onOpenChange,
 }: ExpenseEditDialogProps) {
   function handleSubmit(values: ExpenseFormValues) {
-    console.log("Edit expense:", expense?.id, values);
-    // TODO: implement actual update logic
-    onOpenChange(false);
+    if (!expense) return;
+    router.put(`/expenses/${expense.id}`, values, {
+      onSuccess: () => {
+        onOpenChange(false);
+        toast.success("Expense updated successfully");
+      },
+    });
   }
 
   if (!expense) return null;
@@ -39,11 +47,12 @@ export function ExpenseEditDialog({
         </DialogHeader>
         <ExpenseForm
           key={expense.id}
+          categories={categories}
           defaultValues={{
             description: expense.description,
-            amount: expense.rawAmount,
-            category: expense.category,
-            date: expense.date,
+            amount: expense.amount,
+            category_id: expense.category_id,
+            date: expense.date.split("T")[0],
             note: expense.note ?? "",
           }}
           onSubmit={handleSubmit}

@@ -7,9 +7,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, Filter } from "lucide-react";
-import { categoryIcons } from "../constants";
+import { ExpenseCategory } from "../types";
 
 interface ExpenseFiltersProps {
+  categories: ExpenseCategory[];
   search: string;
   onSearchChange: (value: string) => void;
   categoryFilter: string;
@@ -17,13 +18,12 @@ interface ExpenseFiltersProps {
 }
 
 export function ExpenseFilters({
+  categories,
   search,
   onSearchChange,
   categoryFilter,
   onCategoryFilterChange,
 }: ExpenseFiltersProps) {
-  const categories = Object.keys(categoryIcons);
-
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
       <div className="relative flex-1">
@@ -43,8 +43,8 @@ export function ExpenseFilters({
         <SelectContent>
           <SelectItem value="all">All Categories</SelectItem>
           {categories.map((cat) => (
-            <SelectItem key={cat} value={cat}>
-              {cat}
+            <SelectItem key={cat.id} value={String(cat.id)}>
+              {cat.name}
             </SelectItem>
           ))}
         </SelectContent>

@@ -19,10 +19,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DialogFooter } from "@/components/ui/dialog";
-import { categoryIcons } from "../../constants";
 import { expenseFormSchema, type ExpenseFormValues } from "./schema";
+import { ExpenseCategory } from "../../types";
 
 interface ExpenseFormProps {
+  categories: ExpenseCategory[];
   defaultValues?: Partial<ExpenseFormValues>;
   onSubmit: (values: ExpenseFormValues) => void;
   onCancel: () => void;
@@ -30,19 +31,18 @@ interface ExpenseFormProps {
 }
 
 export function ExpenseForm({
+  categories,
   defaultValues,
   onSubmit,
   onCancel,
   submitLabel,
 }: ExpenseFormProps) {
-  const categories = Object.keys(categoryIcons);
-
   const form = useForm<ExpenseFormValues>({
     resolver: zodResolver(expenseFormSchema),
     defaultValues: {
       description: "",
       amount: 0,
-      category: "",
+      category_id: 0,
       date: new Date().toISOString().split("T")[0],
       note: "",
       ...defaultValues,
@@ -86,13 +86,13 @@ export function ExpenseForm({
           />
           <FormField
             control={form.control}
-            name="category"
+            name="category_id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Category</FormLabel>
                 <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  onValueChange={(val) => field.onChange(Number(val))}
+                  defaultValue={field.value ? String(field.value) : undefined}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -101,8 +101,8 @@ export function ExpenseForm({
                   </FormControl>
                   <SelectContent>
                     {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
+                      <SelectItem key={cat.id} value={String(cat.id)}>
+                        {cat.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
