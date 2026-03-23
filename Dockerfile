@@ -14,11 +14,11 @@ FROM php:8.3-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-  git \
-  curl \
-  unzip \
-  libsqlite3-dev \
-  && rm -rf /var/lib/apt/lists/*
+    git \
+    curl \
+    unzip \
+    libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_sqlite pcntl bcmath
@@ -47,30 +47,8 @@ RUN mkdir -p /data && touch /data/database.sqlite
 # Set permissions
 RUN chmod -R 775 storage bootstrap/cache
 
-# Create startup script
-RUN cat > /app/start.sh << 'EOF'
-#!/bin/bash
-set -e
-
-# Link SQLite database from persistent volume
-ln -sf /data/database.sqlite /app/database/database.sqlite
-
-# Generate key if not set
-if [ -z "$APP_KEY" ]; then
-php artisan key:generate --force
-fi
-
-# Run migrations
-php artisan migrate --force
-
-# Cache configuration
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-# Start the server
-php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
-EOF
+# Copy and set permissions for startup script
+COPY docker/start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
 EXPOSE 8080
