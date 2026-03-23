@@ -47,6 +47,7 @@ export function CategoryEditDialog({
           key={category.id}
           defaultValues={{
             name: category.name,
+            icon: category.icon,
             budget: category.budget,
           }}
           onSubmit={handleSubmit}
