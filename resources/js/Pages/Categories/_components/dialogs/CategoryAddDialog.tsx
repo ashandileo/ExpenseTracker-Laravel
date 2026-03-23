@@ -1,3 +1,4 @@
+import { router } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,9 +22,9 @@ export function CategoryAddDialog({
   onOpenChange,
 }: CategoryAddDialogProps) {
   function handleSubmit(values: CategoryFormValues) {
-    console.log("Add category:", values);
-    // TODO: implement actual create logic
-    onOpenChange(false);
+    router.post("/categories", values, {
+      onSuccess: () => onOpenChange(false),
+    });
   }
 
   return (

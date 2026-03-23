@@ -2,8 +2,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Pencil, Trash2, TrendingUp, TrendingDown, AlertTriangle } from "lucide-react";
-import { Category, categories, formatRupiah } from "../constants";
+import { Pencil, Trash2, AlertTriangle } from "lucide-react";
+import { Category, getCategoryStyle, formatRupiah } from "../constants";
 
 function getStatusBadge(pct: number) {
   if (pct >= 100) {
@@ -30,16 +30,21 @@ function getStatusBadge(pct: number) {
 }
 
 interface CategoryGridProps {
+  categories: Category[];
   onEdit: (category: Category) => void;
   onDelete: (category: Category) => void;
 }
 
-export function CategoryGrid({ onEdit, onDelete }: CategoryGridProps) {
+export function CategoryGrid({ categories, onEdit, onDelete }: CategoryGridProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {categories.map((category) => {
-        const pct = Math.round((category.spent / category.budget) * 100);
+        const pct = category.budget > 0
+          ? Math.round((category.spent / category.budget) * 100)
+          : 0;
         const remaining = category.budget - category.spent;
+        const style = getCategoryStyle(category.icon);
+        const Icon = style.icon;
 
         return (
           <Card key={category.id} className="group relative overflow-hidden">
@@ -47,16 +52,16 @@ export function CategoryGrid({ onEdit, onDelete }: CategoryGridProps) {
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div
-                    className={`flex size-10 items-center justify-center rounded-lg ${category.bgColor} ${category.color}`}
+                    className={`flex size-10 items-center justify-center rounded-lg ${style.bgColor} ${style.color}`}
                   >
-                    <category.icon className="size-5" />
+                    <Icon className="size-5" />
                   </div>
                   <div>
                     <h4 className="scroll-m-20 text-base font-semibold tracking-tight">
                       {category.name}
                     </h4>
                     <p className="text-sm text-muted-foreground">
-                      {category.transactionCount} transactions
+                      {category.transaction_count} transactions
                     </p>
                   </div>
                 </div>
@@ -99,23 +104,6 @@ export function CategoryGrid({ onEdit, onDelete }: CategoryGridProps) {
                     ? `${formatRupiah(remaining)} left`
                     : `${formatRupiah(Math.abs(remaining))} over`}
                 </p>
-                <div className="flex items-center gap-1 text-xs">
-                  {category.trend === "up" ? (
-                    <TrendingUp className="size-3 text-rose-500" />
-                  ) : (
-                    <TrendingDown className="size-3 text-emerald-500" />
-                  )}
-                  <span
-                    className={
-                      category.trend === "up"
-                        ? "text-rose-500"
-                        : "text-emerald-500"
-                    }
-                  >
-                    {category.trendValue}
-                  </span>
-                  <span className="text-muted-foreground">vs last month</span>
-                </div>
               </div>
             </CardContent>
           </Card>

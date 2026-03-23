@@ -1,4 +1,4 @@
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import AppLayout from "@/Layouts/AppLayout";
 import { PageHeader } from "@/components/page-header";
 import { ConfirmationDialog } from "@/components/confirmation-dialog";
@@ -15,12 +15,20 @@ enum Actions {
   CategoryDelete = "category-delete",
 }
 
-export default function Categories() {
+interface CategoriesProps {
+  categories: Category[];
+}
+
+export default function Categories({ categories }: CategoriesProps) {
   const { action, isAction, setAction, clearAction } = useActions<Actions>();
 
   function handleDeleteConfirm() {
-    // TODO: implement actual delete logic
-    clearAction();
+    const category = action?.params as Category;
+    if (!category) return;
+
+    router.delete(`/categories/${category.id}`, {
+      onSuccess: () => clearAction(),
+    });
   }
 
   return (
@@ -40,8 +48,9 @@ export default function Categories() {
       </PageHeader>
 
       <div className="mx-auto max-w-6xl space-y-6 p-6 md:p-8">
-        <CategoryBudgetSummary />
+        <CategoryBudgetSummary categories={categories} />
         <CategoryGrid
+          categories={categories}
           onEdit={(category) => setAction(Actions.CategoryEdit, category)}
           onDelete={(category) => setAction(Actions.CategoryDelete, category)}
         />

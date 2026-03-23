@@ -1,3 +1,4 @@
+import { router } from "@inertiajs/react";
 import {
   Dialog,
   DialogContent,
@@ -21,9 +22,10 @@ export function CategoryEditDialog({
   onOpenChange,
 }: CategoryEditDialogProps) {
   function handleSubmit(values: CategoryFormValues) {
-    console.log("Edit category:", category?.id, values);
-    // TODO: implement actual update logic
-    onOpenChange(false);
+    if (!category) return;
+    router.put(`/categories/${category.id}`, values, {
+      onSuccess: () => onOpenChange(false),
+    });
   }
 
   if (!category) return null;

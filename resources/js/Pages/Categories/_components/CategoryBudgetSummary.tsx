@@ -1,11 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { categories, formatRupiah } from "../constants";
+import { Category, formatRupiah } from "../constants";
 
-export function CategoryBudgetSummary() {
+interface CategoryBudgetSummaryProps {
+  categories: Category[];
+}
+
+export function CategoryBudgetSummary({ categories }: CategoryBudgetSummaryProps) {
   const totalSpent = categories.reduce((sum, c) => sum + c.spent, 0);
   const totalBudget = categories.reduce((sum, c) => sum + c.budget, 0);
-  const totalPct = Math.round((totalSpent / totalBudget) * 100);
+  const totalPct = totalBudget > 0 ? Math.round((totalSpent / totalBudget) * 100) : 0;
 
   return (
     <Card>
