@@ -5,8 +5,8 @@ import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import { useActions } from "@/hooks/use-actions";
 import { CategoryBudgetSummary } from "./_components/CategoryBudgetSummary";
 import { CategoryGrid } from "./_components/CategoryGrid";
-import { CategoryAddDialog } from "./_components/CategoryAddDialog";
-import { CategoryEditDialog } from "./_components/CategoryEditDialog";
+import { CategoryAddDialog } from "./_components/dialogs/CategoryAddDialog";
+import { CategoryEditDialog } from "./_components/dialogs/CategoryEditDialog";
 import { Category } from "./constants";
 
 enum Actions {

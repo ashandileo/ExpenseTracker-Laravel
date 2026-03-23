@@ -7,8 +7,8 @@ import { useActions } from "@/hooks/use-actions";
 import { allExpenses } from "./constants";
 import { ExpenseFilters } from "./_components/ExpenseFilters";
 import { ExpenseList } from "./_components/ExpenseList";
-import { ExpenseAddDialog } from "./_components/ExpenseAddDialog";
-import { ExpenseEditDialog } from "./_components/ExpenseEditDialog";
+import { ExpenseAddDialog } from "./_components/dialogs/ExpenseAddDialog";
+import { ExpenseEditDialog } from "./_components/dialogs/ExpenseEditDialog";
 import { Expense } from "./types";
 
 enum Actions {

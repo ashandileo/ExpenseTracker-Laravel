@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
+import { CategoryForm } from "../forms/CategoryForm";
+import type { CategoryFormValues } from "../forms/schema";
 
 interface CategoryAddDialogProps {
   open: boolean;
@@ -20,6 +20,12 @@ export function CategoryAddDialog({
   open,
   onOpenChange,
 }: CategoryAddDialogProps) {
+  function handleSubmit(values: CategoryFormValues) {
+    console.log("Add category:", values);
+    // TODO: implement actual create logic
+    onOpenChange(false);
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
@@ -35,26 +41,11 @@ export function CategoryAddDialog({
             Create a new budget category to organize your expenses.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="space-y-2">
-            <small className="text-sm leading-none font-medium">
-              Category Name
-            </small>
-            <Input placeholder="e.g. Subscriptions" />
-          </div>
-          <div className="space-y-2">
-            <small className="text-sm leading-none font-medium">
-              Monthly Budget (Rp)
-            </small>
-            <Input type="number" placeholder="0" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button onClick={() => onOpenChange(false)}>Create Category</Button>
-        </DialogFooter>
+        <CategoryForm
+          onSubmit={handleSubmit}
+          onCancel={() => onOpenChange(false)}
+          submitLabel="Create Category"
+        />
       </DialogContent>
     </Dialog>
   );
