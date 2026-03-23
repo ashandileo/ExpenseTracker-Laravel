@@ -2,8 +2,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Pencil, TrendingUp, TrendingDown, AlertTriangle } from "lucide-react";
-import { categories, formatRupiah } from "../constants";
+import { Pencil, Trash2, TrendingUp, TrendingDown, AlertTriangle } from "lucide-react";
+import { Category, categories, formatRupiah } from "../constants";
 
 function getStatusBadge(pct: number) {
   if (pct >= 100) {
@@ -29,7 +29,12 @@ function getStatusBadge(pct: number) {
   );
 }
 
-export function CategoryGrid() {
+interface CategoryGridProps {
+  onEdit: (category: Category) => void;
+  onDelete: (category: Category) => void;
+}
+
+export function CategoryGrid({ onEdit, onDelete }: CategoryGridProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {categories.map((category) => {
@@ -61,8 +66,17 @@ export function CategoryGrid() {
                     variant="ghost"
                     size="icon-xs"
                     className="opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => onEdit(category)}
                   >
                     <Pencil className="size-3" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive"
+                    onClick={() => onDelete(category)}
+                  >
+                    <Trash2 className="size-3" />
                   </Button>
                 </div>
               </div>
