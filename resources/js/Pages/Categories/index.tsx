@@ -7,23 +7,23 @@ import { CategoryGrid } from "./_components/CategoryGrid";
 import { CategoryAddDialog } from "./_components/CategoryAddDialog";
 
 export default function Categories() {
-    const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-    return (
-        <AppLayout>
-            <Head title="Categories" />
+  return (
+    <AppLayout>
+      <Head title="Categories" />
 
-            <PageHeader
-                title="Categories"
-                description="Manage your budget categories"
-            >
-                <CategoryAddDialog open={dialogOpen} onOpenChange={setDialogOpen} />
-            </PageHeader>
+      <PageHeader
+        title="Categories"
+        description="Manage your budget categories"
+      >
+        <CategoryAddDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+      </PageHeader>
 
-            <div className="mx-auto max-w-6xl space-y-6 p-6 md:p-8">
-                <CategoryBudgetSummary />
-                <CategoryGrid />
-            </div>
-        </AppLayout>
-    );
+      <div className="mx-auto max-w-6xl space-y-6 p-6 md:p-8">
+        <CategoryBudgetSummary />
+        <CategoryGrid />
+      </div>
+    </AppLayout>
+  );
 }
