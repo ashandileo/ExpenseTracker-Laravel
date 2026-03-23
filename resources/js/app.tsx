@@ -12,7 +12,9 @@ createInertiaApp({
             "./Pages/**/*.tsx",
             { eager: true },
         );
-        return pages[`./Pages/${name}.tsx`];
+        return (
+            pages[`./Pages/${name}/index.tsx`] ?? pages[`./Pages/${name}.tsx`]
+        );
     },
     setup({ el, App, props }) {
         createRoot(el).render(<App {...props} />);
