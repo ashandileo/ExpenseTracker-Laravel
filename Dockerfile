@@ -10,7 +10,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: PHP application
-FROM php:8.3-cli
+FROM php:8.4-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -37,6 +37,9 @@ COPY . .
 
 # Copy built frontend assets from stage 1
 COPY --from=frontend /app/public/build public/build
+
+# Remove Vite hot file to force production asset loading
+RUN rm -f public/hot
 
 # Run post-install scripts
 RUN composer dump-autoload --optimize
